@@ -1,10 +1,13 @@
-function [J, grad] = computeCost(theta, X, y)
-    grad = zeros(size(theta));
-    m = length(y);
+function [J, grad] = computeCost(theta, X, y, lambda)
+  m = length(y); % number of training examples
     h = sigmoid(X * theta);
-    J = -(1 / m) * sum( (y .* log(h)) + ((1 - y) .* log(1 - h)) );
-    for i = 1 : size(theta, 1)
-        grad(i) = (1 / m) * sum( (h - y) .* X(:, i) );
-    end
+    J = (y' * log(h) + (1 - y)' * log(1 - h)) / -m;
+    grad = X' * (h - y) / m;
+ 
+    % Regularization
+    th = theta; th(1) = 0;
+ 
+    J = J + th' * th * lambda / m / 2;
+    grad = grad + th * lambda / m;
 
 end
